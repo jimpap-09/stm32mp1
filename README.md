@@ -1,3 +1,4 @@
 # stm32mp1
 Σε αυτό το project θα ασχοληθώ με τον σχεδιασμό και τον προγραμματισμό μιας κάρτας stm32mp1_ntua_board με MPU(A7, M4)
-και περιφερειακά όπως PMIC, DDR3, HDMI, USB(ποντίκι, πληκτρολόγιο), ETHERNET, DEBUG
+και περιφερειακά όπως PMIC, DDR3, HDMI, USB(ποντίκι, πληκτρολόγιο), ETHERNET, DEBUG.
+Παρόμοια κάρτα είναι η stm32mp157f-dk2 της ST.
