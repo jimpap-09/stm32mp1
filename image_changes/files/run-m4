@@ -1,0 +1,81 @@
+#!/bin/sh
+
+RPROC="/sys/class/remoteproc/remoteproc0"
+FIRMWARE_LINK="/lib/firmware/rproc-m4-fw"
+FIRMWARE_DIR="/usr/local/m4_examples"
+
+fail() {
+    echo "Error: $1"
+    exit 1
+}
+
+list_firmware() {
+    echo "Available firmware files in $FIRMWARE_DIR:"
+
+    if ls "$FIRMWARE_DIR"/*.elf >/dev/null 2>&1; then
+        ls -1 "$FIRMWARE_DIR"/*.elf | xargs -n1 basename
+    else
+        echo "No .elf files found"
+    fi
+}
+
+if [ $# -ne 1 ]; then
+    echo "Usage: run-m4 <firmware.elf | /full/path/to/firmware.elf>"
+    echo
+    list_firmware
+    exit 1
+fi
+
+FW_INPUT="$1"
+
+case "$FW_INPUT" in
+    /*)
+        FW_PATH="$FW_INPUT"
+        FW_NAME="$(basename "$FW_INPUT")"
+        ;;
+    *)
+        FW_NAME="$FW_INPUT"
+        FW_PATH="$FIRMWARE_DIR/$FW_NAME"
+        ;;
+esac
+
+if [ ! -d "$RPROC" ]; then
+    fail "remoteproc0 not found"
+fi
+
+if [ ! -f "$FW_PATH" ]; then
+    echo "Firmware not found: $FW_PATH"
+    echo
+    list_firmware
+    exit 1
+fi
+
+echo "Selected firmware:"
+echo "  Name: $FW_NAME"
+echo "  Path: $FW_PATH"
+echo
+
+STATE="$(cat "$RPROC/state")"
+
+if [ "$STATE" = "running" ]; then
+    echo "Stopping running firmware..."
+    echo stop > "$RPROC/state"
+fi
+
+echo "Updating firmware link..."
+
+ln -sfn "$FW_PATH" "$FIRMWARE_LINK" \
+    || fail "failed to update firmware symlink"
+
+ls -l "$FIRMWARE_LINK"
+
+echo
+echo "Starting M4..."
+
+echo start > "$RPROC/state" \
+    || fail "failed to start M4"
+
+echo "M4 state: $(cat "$RPROC/state")"
+
+echo
+echo "Done."

@@ -1,0 +1,5 @@
+export REMOTE0="/sys/class/remoteproc/remoteproc0"
+export M4FW="/lib/firmware/rproc-m4-fw"
+export M4DIR="/usr/local/m4_examples"
+export OPENAMP="/usr/local/Cube-M4-examples/STM32MP157F-DK2/Applications/OpenAMP/OpenAMP_TTY_echo/lib/firmware/OpenAMP_TTY_echo.elf"
+export PROFILE_TEST="loaded"

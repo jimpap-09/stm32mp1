@@ -1,0 +1,39 @@
+{
+  "files": [
+    {
+      "name": "profile",
+      "local_path": "image_changes/files/profile",
+      "remote_path": "$HOME/.profile",
+      "mode": "0644",
+      "type": "config"
+    },
+    {
+      "name": "start-m4",
+      "local_path": "image_changes/files/start-m4",
+      "remote_path": "/usr/local/bin/start-m4",
+      "mode": "0755",
+      "type": "script"
+    },
+    {
+      "name": "stop-m4",
+      "local_path": "image_changes/files/stop-m4",
+      "remote_path": "/usr/local/bin/stop-m4",
+      "mode": "0755",
+      "type": "script"
+    },
+    {
+      "name": "restart-m4",
+      "local_path": "image_changes/files/restart-m4",
+      "remote_path": "/usr/local/bin/restart-m4",
+      "mode": "0755",
+      "type": "script"
+    },
+    {
+      "name": "run-m4",
+      "local_path": "image_changes/files/run-m4",
+      "remote_path": "/usr/local/bin/run-m4",
+      "mode": "0755",
+      "type": "script"
+    }
+  ]
+}

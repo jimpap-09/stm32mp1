@@ -1,0 +1,20 @@
+#!/bin/sh
+
+RPROC="/sys/class/remoteproc/remoteproc0"
+
+if [ ! -d "$RPROC" ]; then
+    echo "Error: remoteproc0 not found"
+    exit 1
+fi
+
+STATE="$(cat "$RPROC/state")"
+
+if [ "$STATE" = "running" ]; then
+    echo "Stopping M4..."
+    echo stop > "$RPROC/state"
+fi
+
+echo "Starting M4..."
+echo start > "$RPROC/state"
+
+echo "M4 state: $(cat "$RPROC/state")"
