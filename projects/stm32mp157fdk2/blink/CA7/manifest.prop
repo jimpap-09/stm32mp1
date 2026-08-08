@@ -1,0 +1,5 @@
+MANIFEST_VERSION = openstlinux-6.6-yocto-scarthgap-mpu-v26.02.18
+KERNEL_DT = ./DeviceTree/blink/kernel
+OPTEE_DT = ./DeviceTree/blink/optee-os
+UBOOT_DT = ./DeviceTree/blink/u-boot
+TFA_DT = ./DeviceTree/blink/tf-a
