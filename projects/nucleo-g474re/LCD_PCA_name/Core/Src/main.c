@@ -34,10 +34,11 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
 #define I2C_INSTANCE I2C1
 #define PCA9555_ADDR 0x40
-#define PCA_REG_OUTPUT_0  0x02
-#define PCA_REG_CONFIG_0  0x06
+#define REG_OUTPUT_0  0x02
+#define REG_CONFIGURATION_0  0x06
 
 #define LCD_RS_BIT  0x04 // (1 << 2)
 #define LCD_E_BIT   0x08 // (1 << 3)
@@ -70,7 +71,7 @@ static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
-void PCA9555_WriteRegister(uint8_t reg, uint8_t value);
+void PCA9555_Write(uint8_t reg, uint8_t value);
 void PCA9555_Init(void);
 
 void lcd_write_4bits(uint8_t value);
@@ -138,8 +139,22 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  lcd_data('H');
+	  lcd_data('E');
+	  lcd_data('L');
+	  lcd_data('L');
 	  lcd_data('O');
-	  lcd_data('K');
+	  lcd_data(' ');
+	  lcd_data('M');
+	  lcd_data('Y');
+	  lcd_data(' ');
+	  lcd_data('N');
+	  lcd_data('A');
+	  lcd_data('M');
+	  lcd_data('E');
+	  lcd_data(' ');
+	  lcd_data('I');
+	  lcd_data('S');
 
 	  lcd_command(0xC0); // change line
 
@@ -285,31 +300,33 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-
-void PCA9555_WriteRegister(uint8_t reg, uint8_t value) {
+void PCA9555_Write(uint8_t reg, uint8_t value) {
 	while(LL_I2C_IsActiveFlag_BUSY(I2C_INSTANCE)); // wait bus to be clear
 	// start transfer
-	LL_I2C_HandleTransfer(I2C_INSTANCE, PCA9555_ADDR, LL_I2C_ADDRSLAVE_7BIT, 2, LL_I2C_MODE_AUTOEND, LL_I2C_GENERATE_START_WRITE);
-
-	while(!LL_I2C_IsActiveFlag_TXIS(I2C_INSTANCE));
-
-    LL_I2C_TransmitData8(I2C_INSTANCE, reg);    //send register address
+	LL_I2C_HandleTransfer(I2C_INSTANCE, PCA9555_ADDR, LL_I2C_ADDRSLAVE_7BIT, 2, LL_I2C_MODE_AUTOEND,            LL_I2C_GENERATE_START_WRITE);
 
     while(!LL_I2C_IsActiveFlag_TXIS(I2C_INSTANCE));
 
-    LL_I2C_TransmitData8(I2C_INSTANCE, value);  // send data
+    //send register address
+    LL_I2C_TransmitData8(I2C_INSTANCE, reg);
 
-	while(!LL_I2C_IsActiveFlag_STOP(I2C_INSTANCE));
+    while(!LL_I2C_IsActiveFlag_TXIS(I2C_INSTANCE));
 
-	LL_I2C_ClearFlag_STOP(I2C_INSTANCE);         // wait for stop condition
+    // send data
+    LL_I2C_TransmitData8(I2C_INSTANCE, value);
+
+    while(!LL_I2C_IsActiveFlag_STOP(I2C_INSTANCE));
+    // wait for stop condition
+    LL_I2C_ClearFlag_STOP(I2C_INSTANCE);
 }
 
 void PCA9555_Init(void) {
-	PCA9555_WriteRegister(PCA_REG_CONFIG_0, 0x00); // pex0 as output
+	// pex0 as output
+	PCA9555_Write(REG_CONFIGURATION_0, 0x00);
 
 	pex_data_reg = 0x00;
-	PCA9555_WriteRegister(PCA_REG_OUTPUT_0, pex_data_reg);
 	// initialize output to 0
+	PCA9555_Write(REG_OUTPUT_0, pex_data_reg);
 }
 
 void lcd_write_4bits(uint8_t value) {
@@ -320,17 +337,17 @@ void lcd_write_4bits(uint8_t value) {
 	if (value & 0x04) pex_data_reg |= LCD_D6_BIT;
 	if (value & 0x08) pex_data_reg |= LCD_D7_BIT;
 	// send 4 bits to I2C
-	PCA9555_WriteRegister(PCA_REG_OUTPUT_0, pex_data_reg);
+	PCA9555_Write(REG_OUTPUT_0, pex_data_reg);
 
 }
 
 void lcd_pulse_enable(void) {
 	pex_data_reg |= LCD_E_BIT;
-	PCA9555_WriteRegister(PCA_REG_OUTPUT_0, pex_data_reg);
+	PCA9555_Write(REG_OUTPUT_0, pex_data_reg);
 	LL_mDelay(1);
 
 	pex_data_reg &= ~LCD_E_BIT;
-	PCA9555_WriteRegister(PCA_REG_OUTPUT_0, pex_data_reg);
+	PCA9555_Write(REG_OUTPUT_0, pex_data_reg);
 	LL_mDelay(1);
 
 }
@@ -344,7 +361,7 @@ void lcd_send(uint8_t value, uint8_t mode) {
 		pex_data_reg &= ~LCD_RS_BIT; // for command mode
 	}
 	 // send RS before data
-	PCA9555_WriteRegister(PCA_REG_OUTPUT_0, pex_data_reg);
+	PCA9555_Write(REG_OUTPUT_0, pex_data_reg);
 
 	lcd_write_4bits((value >> 4) & 0x0F); // send 4 high bits
 	lcd_pulse_enable();
@@ -372,7 +389,7 @@ void lcd_init(void) {
 
 	// RS=0,E=0
 	pex_data_reg &= ~(LCD_RS_BIT | LCD_E_BIT);
-	PCA9555_WriteRegister(PCA_REG_OUTPUT_0, pex_data_reg);
+	PCA9555_Write(REG_OUTPUT_0, pex_data_reg);
 
 	lcd_write_4bits(0x03);
 	    lcd_pulse_enable();
@@ -396,8 +413,6 @@ void lcd_init(void) {
 	    lcd_command(0x06); // Increment cursor
 	    lcd_clear();
 }
-
-
 
 /* USER CODE END 4 */
 
