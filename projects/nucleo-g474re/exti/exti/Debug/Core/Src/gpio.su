@@ -1,0 +1,10 @@
+../Drivers/CMSIS/Include/core_cm4.h:1667:26:__NVIC_GetPriorityGrouping	4	static
+../Drivers/CMSIS/Include/core_cm4.h:1679:22:__NVIC_EnableIRQ	16	static,ignoring_inline_asm
+../Drivers/CMSIS/Include/core_cm4.h:1809:22:__NVIC_SetPriority	16	static
+../Drivers/CMSIS/Include/core_cm4.h:1856:26:NVIC_EncodePriority	40	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h:451:22:LL_AHB2_GRP1_EnableClock	24	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_system.h:717:22:LL_SYSCFG_SetEXTISource	32	static,ignoring_inline_asm
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:285:22:LL_GPIO_SetPinMode	48	static,ignoring_inline_asm
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:496:22:LL_GPIO_SetPinPull	48	static,ignoring_inline_asm
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:923:22:LL_GPIO_ResetOutputPin	16	static
+../Core/Src/gpio.c:18:6:MX_GPIO_Init	48	static
